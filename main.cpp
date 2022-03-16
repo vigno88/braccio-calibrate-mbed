@@ -4,47 +4,44 @@
  */
 
 #include "mbed.h"
+#include "Servo.h"
 
-// Specify different pins to test printing on UART other than the console UART.
-#define TARGET_TX_PIN                                                     USBTX
-#define TARGET_RX_PIN                                                     USBRX
+DigitalOut enable(PA_6);
 
-// Create a BufferedSerial object to be used by the system I/O retarget code.
-static BufferedSerial serial_port(TARGET_TX_PIN, TARGET_RX_PIN, 9600);
+Servo base(PA_7);
+Servo shoulder(PD_14); // 0 is center
+Servo elbow(PD_15);
+Servo wrist_vert(PE_9);
+Servo wrist_rot(PE_11);
+Servo gripper(PE_13);
 
-FileHandle *mbed::mbed_override_console(int fd)
-{
-    return &serial_port;
+int main() {
+  enable.write(0);
+
+  base.attach(0);
+  shoulder.attach(0);
+  elbow.attach(1);
+  wrist_rot.attach(0);
+  wrist_vert.attach(0);
+  gripper.attach(0);
+  
+  base.write(0);
+  shoulder.write(0);    
+  elbow.write(5);       // center
+  wrist_rot.write(0);
+  wrist_vert.write(-3);
+  gripper.write(0);
+
+  enable.write(1);
+  
+  while (1) {
+    base.write(0);
+    shoulder.write(0);
+    elbow.write(5);
+    wrist_rot.write(0);
+    wrist_vert.write(-3);
+    gripper.write(0);
+
+    ThisThread::sleep_for(200ms);
+  }
 }
-
-int main(void)
-{
-    // print to the console using the `serial_port` object.
-    printf(
-        "Mbed OS version %d.%d.%d\n",
-        MBED_MAJOR_VERSION,
-        MBED_MINOR_VERSION,
-        MBED_PATCH_VERSION
-    );
-}
-
-//int main()
-//{
-    // Initialise the digital pin LED1 as an output
-//#ifdef LED1
-//    DigitalOut led3(LED3);
-//    DigitalOut led2(LED2);
-//    DigitalOut led1(LED1);
-//#else
-//    bool led;
-//#endif
-//
-//    while (true) {
-//        led1 = !led1;
-//        ThisThread::sleep_for(BLINKING_RATE);
-//        led2 = !led2;
-//        ThisThread::sleep_for(BLINKING_RATE);
-//        led3 = !led3;
-//        ThisThread::sleep_for(BLINKING_RATE);
-//    }
-//}
