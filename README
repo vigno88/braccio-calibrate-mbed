@@ -1,0 +1,15 @@
+This project uses mbed os. The OS is near 1Go so to prevent to have a copy in all of my
+projects, the mbed os folder is in the parent folder.
+
+This is the output of: sudo mbed config --list
+
+[mbed] Global config:
+MBED_OS_DIR=/home/nathan/fun/robotic/braccio_projects/mbed-os/
+TARGET=NUCLEO_F767ZI
+GCC_ARM_PATH=/usr/bin/
+
+And this is the command to build/flash the project:
+
+sudo mbed compile -m NUCLEO_F767ZI -t GCC_ARM  --source . --source ../mbed-os/ --flash
+
+
